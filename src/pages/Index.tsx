@@ -8,15 +8,26 @@ const Index = () => {
   const navigate = useNavigate();
 
   const handleDiscordLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'discord',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'discord',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
 
-    if (error) {
-      console.error('Login error:', error.message);
+      if (error) {
+        console.error('Login error:', error.message);
+        return;
+      }
+
+      // If we have a session, redirect to home
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/home');
+      }
+    } catch (err) {
+      console.error('Unexpected error during login:', err);
     }
   };
 

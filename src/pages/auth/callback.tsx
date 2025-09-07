@@ -7,13 +7,28 @@ const AuthCallback = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        navigate('/home');
-      } else {
+    const handleAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+          navigate('/');
+          return;
+        }
+
+        if (session) {
+          navigate('/home');
+        } else {
+          navigate('/');
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
         navigate('/');
       }
-    });
+    };
+
+    handleAuth();
   }, [supabase, navigate]);
 
   return (

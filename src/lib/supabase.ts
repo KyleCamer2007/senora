@@ -13,11 +13,17 @@ if (!supabaseUrl || !supabaseKey) {
   `);
 }
 
-// Validate URL format
 try {
   new URL(supabaseUrl);
 } catch (error) {
   throw new Error(`Invalid Supabase URL: ${supabaseUrl}`);
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
+  auth: {
+    flowType: 'pkce',
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});
