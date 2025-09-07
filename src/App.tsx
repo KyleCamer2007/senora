@@ -7,19 +7,9 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import AuthCallback from "./pages/auth/callback";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types/supabase";
+import { supabase } from "./lib/supabase";
 
 const queryClient = new QueryClient();
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Missing Supabase environment variables");
-}
-
-const supabase = createClient<Database>(supabaseUrl, supabaseKey);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
